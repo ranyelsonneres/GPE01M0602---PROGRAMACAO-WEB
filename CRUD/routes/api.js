@@ -24,4 +24,31 @@ router.post('/', (req, res) => {
 
 });
 
+//inserir as demais rotas (atualizar e editar)
+//rota para atualizar
+router.put('/:id', (req, res) => {
+    //pegar os dados do formulario JSON
+    const {nome, email} = req.body;
+    const {id} = req.params;
+
+    //atualizar os campos
+    db.query('UPDATE users SET nome = ?, email = ? WHERE id = ?', [nome, email, id], (err) => {
+        if (err) return res.status(500).send(err);
+
+        res.json({id, nome, email});
+    });
+});
+
+//rota para a exclusão
+router.delete('/:id', (req, res) => {
+    const {id} = req.params;
+
+    //executar o comando SQL
+    db.query('DELETE FROM users WHERE id = ?', [id], (err) => {
+        if (err) return res.status(500).send(err);
+        res.sendStatus(204);
+    });
+});
+
+//exportar para utilizar no server.js
 module.exports = router;
